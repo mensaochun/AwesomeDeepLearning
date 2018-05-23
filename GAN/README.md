@@ -1,6 +1,8 @@
 # 史上最通俗易懂的GAN入门
 
-主要从两个部分来讲GAN，第一部分，直觉，从直觉上建立起对GAN的认识。再以此切入第二部分，GAN背后的数学原理。
+[TOC]
+
+主要从两个部分来讲GAN，第一部分，直觉，从直觉上建立起对GAN的认识。再以此切入第二部分：GAN背后的数学原理。
 
 ## I. 直觉
 
@@ -12,7 +14,9 @@
 
 ![幻灯片8](./pics/Introduction/8.PNG)
 
-GAN中用于Generation的部分称为Generator。Generator（生成器）实际上是一个函数，目前用得比较多的是神经网络。我们给Generator喂入一些随机向量，它就可以产生我们想要的结果。而且，随机输入的向量中，每一个维度都代表了某种意义或者特征，比如说画红框的维度实际上就分别代表了头发长短，头发颜色和嘴巴张开状态等特征。改变这些维度的数值会改变相应的特征。
+GAN中用于Generation的部分称为Generator。Generator（生成器）实际上是一个函数，目前用得比较多的是神经网络。我们给Generator喂入一些随机向量，它就可以产生我们想要的结果。
+
+而且，随机输入的向量中，每一个维度都可能代表了某种意义或者特征，比如说画红框的维度实际上就分别代表了头发长短，头发颜色和嘴巴张开状态等特征。改变这些维度的数值会改变相应的特征。
 
 ![幻灯片9](./pics/Introduction/幻灯片9.PNG)
 
@@ -87,27 +91,27 @@ GAN中的Generator和Discriminator是相互不断进化的。如下图，第一�
 
 ![幻灯片24](./pics/Introduction/幻灯片24.PNG)
 
-
-
-## 二、Can Generator Learn  by Itself
+### 二、Can Generator Learn  by Itself
 
 通过以上讲解，我们已经知道，GAN通过Generator和Discriminator相互竞争，可以生成很逼真的图片。我们现在想知道一个问题，就是如果没有Discriminator的话，Generator还可以生成图片吗？以下就对这个疑问进行解释。
 
 #### 1. 固定输入向量的Generator
 
-实际上我们只用一个Generator就可以进行生成图片。并不需要Discriminator。可以这么做：假设我们从database中采样了m张图片，我们给每张图片都对应上一个向量。这样就构成了<向量，图片>对。这时候我们可以通过传统的监督学习得到一个Generator，对于每个输入向量，都对应着图片输出。
+实际上我们只用一个Generator就可以进行生成图片。并不需要Discriminator。可以这么做：假设我们从database中采样了m张图片，我们给每张图片都对应上一个向量。这样就构成了<向量，图片>对。这时候我们可以通过传统的监督学习得到一个Generator，对于每个输入向量，都对应着图片输出。这种和图像分类是相反的。
 
-但是，这样的Generator有一个问题，比如对于同样是数字1的图片，输入向量在距离上应该比较接近，但是这个不容易做到。[todo]
+但是，这样的Generator有一个问题，输入的向量，也就是code要怎么来？我们可以随机产生这些向量。但是这样有一个问题，比如我们想生成两个数字1，理论上输入的code应该比较相像（比如对于同样是数字1的图片，code的第一维都是0.1），但是由于这些code是随机生成的，因此很难控制它们相像。
+
+这个时候可以考虑使用autoencoder中的encoder来产生这个code。
 
 ![幻灯片35](./pics/Introduction/幻灯片35.PNG)
 
-#### 2. AutoEncoder中的Decoder作为Generator
+#### 2. AutoEncoder中的decoder作为Generator
 
-这个时候可以考虑使用AutoEncoder。AutoEncoder中的Encoder可以将图片编码到一个低维空间。
+我们可以考虑使用autoencoder中的encoder来产生这个code。给Encoder输入一张图片，encoder将其编码到低维空间：
 
 ![幻灯片36](./pics/Introduction/幻灯片36.PNG)
 
-AutoEncoder的Decoder部分会将code解码为原始输入。然后编码和解码一起训练。
+ 而AutoEncoder的Decoder部分会将code解码为原始输入。Encoder和Decoder没办法分开train，但可以将Encoder和Decoder联合起来，进行end-to-end的训练。
 
 ![幻灯片37](./pics/Introduction/幻灯片37.PNG)
 
@@ -115,19 +119,19 @@ AutoEncoder的Decoder部分会将code解码为原始输入。然后编码和解�
 
 ![幻灯片38](./pics/Introduction/幻灯片38.PNG)
 
-在code空间中，通过随机输入一些向量，就可以生成相应的图片。
+举个数字生成的例子：在code空间中，通过随机输入一些向量，就可以生成相应的图片。
 
 ![幻灯片39](./pics/Introduction/幻灯片39.PNG)
 
 ![幻灯片40](./pics/Introduction/幻灯片40.PNG)
 
-但是AutoEncoder存在一个问题，就是code之间存在一个gap。在code空间中，训练数据没有cover到的区域，很难生成一个好的图片。
+但是AutoEncoder存在一个问题，就是code之间存在一个gap。gap之间的code，比如$0.5a+0.5b$可能就可能产生噪声，而不是正的数字1）。在code空间中，训练数据没有cover到的区域，很难生成一个好的图片。
 
 ![幻灯片41](./pics/Introduction/幻灯片41.PNG)
 
 #### 3. 变分自编码的Decoder作为Generator
 
-这个时候需要用到variational AutoEncoder。变分自编码通过给code加上噪声，可以使训练数据cover到更多的code空间。其中噪声是网络Encoder输出的一个向量与高斯噪声产生的向量的积。为了不让Encoder输出的向量被训练为0，这时候还需要对其添加一个限制，如黄色框所示。
+Autoencoder作为生成器有它的缺点，这个时候需要用到variational AutoEncoder。变分自编码通过给code加上噪声，可以使训练数据cover到更多的code空间。其中噪声是网络Encoder输出的一个向量与高斯噪声产生的向量的积。为了不让Encoder输出的向量被训练为0，这时候还需要对其添加一个限制，如黄色框所示。
 
 ![幻灯片42](./pics/Introduction/幻灯片42.PNG)
 
@@ -135,7 +139,7 @@ AutoEncoder的Decoder部分会将code解码为原始输入。然后编码和解�
 
 ![幻灯片44](./pics/Introduction/幻灯片44.PNG)
 
-## 三、Can Discriminator Generate
+### 三、Can Discriminator Generate
 
 以上讲了单独的Generator也是可以进行生成的，那么单独的Discriminator能否也用来生成呢？答案是可以的！下面就进行详细介绍。
 
@@ -149,41 +153,71 @@ Discriminator实际上也是一个function。对于输入x，会输出一个scal
 
 假设我们手中已经有了一个训练好的Discriminator，如果我们想生成一张好的照片，我们只要去做这个操作：$\hat x=argmaxD(x)$就可以得到一张评分很高的照片。这里假设我们可以解这个argmax的问题。不过，现在的问题是，怎么得到这个Discriminator？
 
-![幻灯片50](/home/pi/stone/Notes/DeepLearning/GAN/pics/Introduction/幻灯片50.PNG)
+![幻灯片50](./pics/Introduction/幻灯片50.PNG)
 
 我们现在手头上实际只有真实样本，如果只通过正样本训练，Discriminator只会学会让输出为1。这样不能满足我们的要求。因此，我们需要有负样本来进行训练。
 
-![幻灯片51](/home/pi/stone/Notes/DeepLearning/GAN/pics/Introduction/幻灯片51.PNG)
+![幻灯片51](./pics/Introduction/幻灯片51.PNG)
 
-![幻灯片52](/home/pi/stone/Notes/DeepLearning/GAN/pics/Introduction/幻灯片52.PNG)
+所以我们现在需要负样本来训练Discriminator。但是从哪里找负样本很关键。如果负样本只是随机给的负样本，这样训练出来的Discriminator对相对于噪声真实的图片可能会给一个比价高的分数。这个不是我们希望的。我们希望对于那些比较真实的假图片给很低的分数。
 
-那么要怎样得到负样本？我们可以这么做：在开始训练的时候，我们随机生成一些负样本。在每次迭代过程中，我们从Discriminator中进行argmax采样，将得到的样本作为负样本。
+![幻灯片52](./pics/Introduction/幻灯片52.PNG)
 
-![幻灯片53](/home/pi/stone/Notes/DeepLearning/GAN/pics/Introduction/幻灯片53.PNG)
+那么现在的问题是要怎样得到非常真实的负样本？可以通过迭代训练的方法来完成。
 
-![幻灯片54](/home/pi/stone/Notes/DeepLearning/GAN/pics/Introduction/幻灯片54.PNG)
+我们可以这么做：
 
-![幻灯片55](/home/pi/stone/Notes/DeepLearning/GAN/pics/Introduction/幻灯片55.PNG)
+1. 在开始训练的时候，我们随机生成一些负样本。
+2. 在每次迭代过程中：
+   - 首先通过正负样本来训练一个Discriminator。
+
+   - 然后从Discriminator中进行argmax采样，将得到的样本作为负样本。
+
+不断地迭代循环，最终就训练好一个Discriminator，然后用argmax来对Discriminator进行采样。
+
+![幻灯片53](./pics/Introduction/幻灯片53.PNG)
+
+以下用图形的形式解释这个过程：
+
+![幻灯片54](./pics/Introduction/幻灯片54.PNG)
+
+![幻灯片55](./pics/Introduction/幻灯片55.PNG)
 
 这种方法实际上在很多算法中都有应用。
 
-![幻灯片56](/home/pi/stone/Notes/DeepLearning/GAN/pics/Introduction/幻灯片56.PNG)
+![幻灯片56](./pics/Introduction/幻灯片56.PNG)
 
-![幻灯片57](/home/pi/stone/Notes/DeepLearning/GAN/pics/Introduction/幻灯片57.PNG)
+### 四、总结Generator和Discriminator
 
-![幻灯片58](/home/pi/stone/Notes/DeepLearning/GAN/pics/Introduction/幻灯片58.PNG)
+Generator：
+
+优点：很容易生成。
+
+缺点：没有考虑component和component之间的相关性，没有大局观。
+
+Discriminator：
+
+优点：有大局观。
+
+缺点：不好做生成，argmax问题通常很难解。
+
+![幻灯片57](./pics/Introduction/幻灯片57.PNG)
+
+现在，将Generator和Discriminator结合起来，Generator可以产生data，取代“直接解决Discriminator的argmax问题”，实际上，Generator是学会了如果解决argmax的问题。
+
+![幻灯片58](./pics/Introduction/幻灯片58.PNG)
 
 将generator和Discriminator结合起来有非常大的好处。
 
-从Discriminator的角度来说，可以由generator来产生负样本。解决了产生负样本难的问题。
+从Discriminator的角度来说，解argmax问题可以由generator来做，解决了“argmax问题很难解”的问题。Generator不是Autoencoder那种通过L2 loss来进行学习的方式，而是通过Discriminator的带领来学会全局观。
 
-从Generator的角度来说，Generator仍然是component-by-component的产生图片，但是它可以从Discriminator的全局观中进行学习。
+从Generator的角度来说，不再是Autoencoder那种通过L2 loss来进行学习的方式，而是通过Discriminator的带领来学会全局观。
 
-![幻灯片59](/home/pi/stone/Notes/DeepLearning/GAN/pics/Introduction/幻灯片59.PNG)
+![幻灯片59](./pics/Introduction/幻灯片59.PNG)
 
 以下是由VAE和GAN生成的图片的对比。
 
-![幻灯片60](/home/pi/stone/Notes/DeepLearning/GAN/pics/Introduction/幻灯片60.PNG)
+![幻灯片60](./pics/Introduction/幻灯片60.PNG)
 
 
 
