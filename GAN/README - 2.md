@@ -318,21 +318,13 @@ $argmin_{G}max_DV(G,D)$
 
 ![幻灯片35](./pics/math/幻灯片35.PNG)
 
-会有一个问题：
-
-![幻灯片36](./pics/math/幻灯片36.PNG)
-
-实践中：1. 期望不能做积分，就通过sample。
-
-这个实际上就是cross entropy。
-
 ### 3. 实作
 
 
 
 ![幻灯片37](./pics/math/幻灯片37.PNG)
 
-如果D的loss很大，就说明$p_{data}$和$p_G$的js divergence很大，反之很小。下面少一个参数。
+如果D的loss很大，就说明$p_{data}$和$p_G$的js divergence很大，反之很小。
 
 ![幻灯片38](./pics/math/幻灯片38.PNG)
 
@@ -340,13 +332,22 @@ learning D: 固定G，那么表现为从G中进行sample。
 
 learning G: 固定D，那么意味着和第一项没有关系。
 
-注意：G不能update太多，否则可能导致JS divergence太小。但是ian goodfelloe，learning D只要一次。
+注意：
+
+1. G不能update太多，否则可能导致JS divergence不能下降。
+2. 原始paper，learning D只要一次。
 
 ![幻灯片39](./pics/math/幻灯片39.PNG)
 
 
 
+loss function的改进。
+
+理论上，在学习G的时候是$argmin_GE_{x-P_{G}}[log(1-D(x))]$。但是，在训练的开始阶段，Generator产生的x通常会得到较小的D(x)值，这个时候，根据$log(1-D(x))$曲线可知，斜率较低，因此网络更新会很慢。所以在实际操作中，通常将其改为$-log(D(x))$，形式是一样的，但有助于训练。
+
 ![幻灯片40](./pics/math/幻灯片40.PNG)
+
+
 
 
 
