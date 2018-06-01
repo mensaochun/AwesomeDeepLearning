@@ -1,4 +1,4 @@
-# 史上最通俗易懂的GAN入门
+# Introduction to GAN
 
 [TOC]
 
@@ -101,13 +101,13 @@ GAN中的Generator和Discriminator是相互不断进化的。如下图，第一�
 
 但是，这样的Generator有一个问题，输入的向量，也就是code要怎么来？我们可以随机产生这些向量。但是这样有一个问题，比如我们想生成两个数字1，理论上输入的code应该比较相像（比如对于同样是数字1的图片，code的第一维都是0.1），但是由于这些code是随机生成的，因此很难控制它们相像。
 
-这个时候可以考虑使用autoencoder中的encoder来产生这个code。
+这个时候可以考虑使用AutoEncoder中的Encoder来产生这个code。
 
 ![幻灯片35](./pics/Introduction/幻灯片35.PNG)
 
-#### 2. AutoEncoder中的decoder作为Generator
+#### 2. AutoEncoder中的Decoder作为Generator
 
-我们可以考虑使用autoencoder中的encoder来产生这个code。给Encoder输入一张图片，encoder将其编码到低维空间：
+我们可以考虑使用AutoEncoder中的Encoder来产生这个code。给Encoder输入一张图片，Encoder将其编码到低维空间：
 
 ![幻灯片36](./pics/Introduction/幻灯片36.PNG)
 
@@ -131,7 +131,7 @@ GAN中的Generator和Discriminator是相互不断进化的。如下图，第一�
 
 #### 3. 变分自编码的Decoder作为Generator
 
-Autoencoder作为生成器有它的缺点，这个时候需要用到variational AutoEncoder。变分自编码通过给code加上噪声，可以使训练数据cover到更多的code空间。其中噪声是网络Encoder输出的一个向量与高斯噪声产生的向量的积。为了不让Encoder输出的向量被训练为0，这时候还需要对其添加一个限制，如黄色框所示。
+AutoEncoder作为生成器有它的缺点，这个时候需要用到variational AutoEncoder(变分自编码 )。变分自编码通过给code加上噪声，可以使训练数据cover到更多的code空间。其中噪声是网络Encoder输出的一个向量与高斯噪声产生的向量的积。为了不让Encoder输出的向量被训练为0，这时候还需要对其添加一个限制，如黄色框所示。
 
 ![幻灯片42](./pics/Introduction/幻灯片42.PNG)
 
@@ -147,7 +147,7 @@ Discriminator实际上也是一个function。对于输入x，会输出一个scal
 
 ![幻灯片48](./pics/Introduction/幻灯片48.PNG)
 
-那Discriminator怎么用做生成呢？在之前我们讲到，Variational Autoencoder的生成器是不容易捕捉特征之间的相关性的，因此生成的图片经常不太真实。但是，如果用Discriminator用作Generator的话，可以很好解决这个问题，因为假设Discriminator是CNN架构的话，它很容易学习到图片的特征。
+那Discriminator怎么用做生成呢？在之前我们讲到，Variational AutoEncoder的生成器是不容易捕捉特征之间的相关性的，因此生成的图片经常不太真实。但是，如果用Discriminator用作Generator的话，可以很好解决这个问题，因为假设Discriminator是CNN架构的话，它很容易学习到图片的特征。
 
 ![幻灯片49](./pics/Introduction/幻灯片49.PNG)
 
@@ -209,9 +209,9 @@ Discriminator：
 
 将generator和Discriminator结合起来有非常大的好处。
 
-从Discriminator的角度来说，解argmax问题可以由generator来做，解决了“argmax问题很难解”的问题。Generator不是Autoencoder那种通过L2 loss来进行学习的方式，而是通过Discriminator的带领来学会全局观。
+从Discriminator的角度来说，解argmax问题可以由generator来做，解决了“argmax问题很难解”的问题。Generator不是AutoEncoder那种通过L2 loss来进行学习的方式，而是通过Discriminator的带领来学会全局观。
 
-从Generator的角度来说，不再是Autoencoder那种通过L2 loss来进行学习的方式，而是通过Discriminator的带领来学会全局观。
+从Generator的角度来说，不再是AutoEncoder那种通过L2 loss来进行学习的方式，而是通过Discriminator的带领来学会全局观。
 
 ![幻灯片59](./pics/Introduction/幻灯片59.PNG)
 
