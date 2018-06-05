@@ -16,7 +16,7 @@
 
 Unet是基于FCN网络的思想设计的，整个网络只有卷积层，而没有全连接层。网络的浓缩路径，图像分辨率逐渐降低，上下文信息会逐渐增强。在扩展路径中，通过上下样的方式，让特征图的分辨率逐渐增大，为了结合低层feature map的强位置信息，Unet进行了横向连接，也就是将浓缩路径中的相应部分连接到扩展路径中。需要注意的是，这种横向连接是在通道上进行concate。
 
-![1](/home/pi/stone/Notes/DeepLearning/segmentaion/notes/Unet/pics/1.png)
+![1](./pics/1.png)
 
 Unet做的修改有：
 
@@ -49,13 +49,13 @@ Unet做的修改有：
 
 网络输出的是pixel-wise的softmax。表达式如下：
 
-![2](/home/pi/stone/Notes/DeepLearning/segmentaion/notes/Unet/pics/2.png)
+![2](./pics/2.png)
 
 其中，$x$为二维平面（$Ω $）上的像素位置，$a_k(x)$表示网络最后输出层中pixel $x$对应的第$k$个通道的值，$K$是类别总数。$p_k(x)$表示像素$x$属于$k$类的概率。
 
 损失函数使用negative cross entropy。cross entropy的数学表达式如下：
 
-![3](/home/pi/stone/Notes/DeepLearning/segmentaion/notes/Unet/pics/3.png)
+![3](./pics/3.png)
 
 其中$p_l(x)$表示$x$在真实label所在通道上的输出概率。需要特别注意的是cross entropy中还添加一个权重项$w(x)$ 。这是因为考虑到物体间的边界需要更多的关注，所对应的损失权重需要更大。
 
@@ -65,7 +65,7 @@ Unet做的修改有：
 
 我们得到一张图片的ground truth是一个二值的mask，本文首先采用形态学方法去计算出物体的边界。然后通过以下的表达式去计算权重图。
 
-![4](/home/pi/stone/Notes/DeepLearning/segmentaion/notes/Unet/pics/4.png)
+![4](./pics/4.png)
 
 其中wc(x)是类别权重，需要根据训练数据集中的各类别出现的频率来进行统计，类别出现的频率越高，应该给的权重越低，越高则给的权重越高（文章没有详细说是怎么计算的）。d1表示物体像素到最近cell的边界的距离，d2表示物体像素到第二近的cell的边界的距离。在本文中，设置w0=10。
 
