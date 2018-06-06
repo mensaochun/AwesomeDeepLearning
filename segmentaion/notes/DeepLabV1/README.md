@@ -6,30 +6,32 @@
 
 论文发表日期：
 
+https://zhuanlan.zhihu.com/p/37124598
+
+
+
 ## 创新点
 
 本文将深度卷积网络（DCNN）和概率图模型结合起来，解决pixel-level的语义分割问题。作者指出DCNN的最后层的特征通常是非常high-level的，对于需要精准定位的语义分割来说通常是不够的。因此作者提出将DCNN的最后一层加上全连接条件随机场（fully connected conditional random field(CRF)）的方法来解决语义分割中的定位不准确的问题。
 
-
-
 ## 思想
 
-DCNN网络具有不变形特性，对于图像分类这些high-level的任务来说，这种不变形是非常有用的。但是对于语义分割和姿态估计等这些low-level的任务来说，需要非常精准的像素定位而非特征抽象，这中不变形反而是非常不利的。
+DCNN网络具有不变形特性，对于图像分类这些high-level的任务来说，这种不变形是非常有用的。但是对于语义分割和姿态估计等这些low-level的任务来说，需要非常精准的像素定位而非特征抽象，这种不变性反而是非常不利的。
 
 DCNN如果直接用于语义分割会存在两个问题：
 
 1. 下采样(如max pooling)会导致分辨率降低，不利于像素级别的语义分割问题。
-2. DCNN的空间不变性（spatial insensitivity/invariance）导致模型的空间准确率减低。
+2. DCNN的空间不变性（spatial insensitivity/invariance），分类器获取对象类别的信息是需要空间变换不变性的，但这限制了DCNN的空间定位精度。
 
 针对以上两个问题，文章作者分别提出了解决方法：
 
 对于1：使用atrous卷积（和空洞卷积是一个意思）来减少分辨率降低。
 
-对于2：使用全连接CRF来解决DCNN空间不变形问题。
+对于2：使用全连接CRF来提高模型捕获细节和边缘信息的能力。
 
+## 基本概念
 
-
-## **3.1. 空洞卷积**
+### 空洞卷积
 
 - 参考资料： [知乎提问：如何理解空洞卷积（dilated convolution）？](https://www.zhihu.com/question/54149221/answer/192025860)
 
@@ -84,13 +86,17 @@ CRFs在传统图像处理中主要用于平滑具有噪声的图像分割结果(
 
 - 效果不如dense CRF，但也有一定提高。最终模型是结合了Desne CRF与Multi-scale Prediction。
 
-## **3.4. DeepLab V1 结构**
 
-- 主要是对原有VGG网络进行了一些变换：
 
-- - 将原先的全连接层通过卷基层来实现。
-  - VGG网络中原有5个max pooling，先将后两个max pooling去除（看别的博客中说，其实没有去除，只是将max pooling的stride从2变为1），相当于只进行了8倍下采样。
-  - 将后两个max pooling后的普通卷基层，改为使用带孔卷积。
+## 模型
+
+主要是对原有VGG网络进行了一些变换：
+
+将原先的全连接层通过卷基层来实现。
+
+- VGG网络中原有5个max pooling，先将后两个max pooling去除（看别的博客中说，其实没有去除，只是将max pooling的stride从2变为1），相当于只进行了8倍下采样。
+- 将后两个max pooling后的普通卷基层，改为使用带孔卷积。
+
 
 - 为了控制视野域（同时减少计算量），对于VGG中的第一个fully connected convlution layer，即7*7的卷基层，使用3*3或4*4的卷积来替代。
 

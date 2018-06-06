@@ -57,7 +57,7 @@
 
 本文设置了两种网络架构，一种是前端网络，另外一种是前端＋上下文模块网络（如下图）。可见，后者包括了前者。
 
-![architecture](/home/pi/stone/Notes/DeepLearning/segmentaion/notes/pics/architecture.png)
+![architecture](./pics/architecture.png)
 
 ### 前端（front-end）
 
