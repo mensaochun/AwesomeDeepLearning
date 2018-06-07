@@ -131,11 +131,11 @@ FCN是基于深度学习的语义分割的开山之作，尽管现在很多方�
 
 FCN的upconvolution层+shortcut connections产生的分割图比较粗糙，因此SegNet增加了更多的shortcut connections。不过，SegNet并不是直接将encoder的特征进行直接复制，而是对maxpooling中的indices进行复制，这使得SegNet的效率更高。
 
-![segnet](E:\DeepLearning\segmentaion\pics\segnet.png)
+![segnet](./pics/segnet.png)
 
 maxpooling 的indices复制原理如下：
 
-![poolingindex](E:\DeepLearning\segmentaion\pics\poolingindex.png)
+![poolingindex](./pics/poolingindex.png)
 
 **Benchmarks (VOC2012)**
 
@@ -270,12 +270,32 @@ pooling操作可以增大感受野，对于图像分类任务来说这有很大�
 >
 > [Arxiv Link](https://arxiv.org/abs/1612.01105)
 
-****
+**主要贡献**
+
+1. 使用pyramid pooling整合context。
+2. 使用auxiliary loss。
+
+**概要**
+
+骨架网络使用Resnet，并在此基础上加上pyramid pooling module。该模块用到了很多kernel大小不一的pooling 。将pooling的结果再上采样，经过concatenate进行融合。
+
+![pspnet](./pics/pspnet.png)
+
+在RESNET的第四阶段（即输入到金字塔池模块）之后，应用auxiliary loss。这种方法在别的地方也被称为intermediate supervision。
+
+![auxiliaryLoss](./pics/auxiliaryLoss.png)
+
+**Benchmarks (VOC2012)**
+
+| Score | Comment                                  | Source                                   |
+| ----- | ---------------------------------------- | ---------------------------------------- |
+| 85.4  | MSCOCO pretraining, multi scale input, no CRF | [leaderboard](http://host.robots.ox.ac.uk:8080/leaderboard/displaylb.php?challengeid=11&compid=6#KEY_PSPNet) |
+| 82.6  | no MSCOCO pretraining, multi scale input, no CRF | reported in the paper                    |
+
+#### 7. Large Kernel Matters
 
 pass
 
-
-
-#### 7. deeplab v3
+#### 8. deeplab v3
 
 pass

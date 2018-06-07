@@ -38,7 +38,7 @@
 1. 这样的设计不是唯一的。实际上每个RefineNet可以接收多个RESNET blocks。不过这里只将前者。
 2. 虽然所有的RefineNet都具有相同的内部结构，但是它们的参数没有不一样，这样允许更灵活地适应各个级别的细节信息。
 
-![1](E:\DeepLearning\segmentaion\notes\RefineNet\pics\1.png)
+![1](./pics/1.png)
 
 为了解决深度网络缺少细粒度信息的这个限制。
 
@@ -46,7 +46,7 @@
 
 ### RefineNet
 
-![2](E:\DeepLearning\segmentaion\notes\RefineNet\pics\2.png)
+![2](./pics/2.png)
 
 RefineNet包括以下几种小模块：
 
@@ -59,8 +59,8 @@ RefineNet包括以下几种小模块：
 
 本文在很多数据集上做了实验，效果比较好，这里仅看PASCAL VOC2012的结果：
 
-![3](E:\DeepLearning\segmentaion\notes\RefineNet\pics\3.png)
+![3](./pics/3.png)
 
 与其他方法的对比：
 
-![4](E:\DeepLearning\segmentaion\notes\RefineNet\pics\4.png)
+![4](./pics/4.png)
