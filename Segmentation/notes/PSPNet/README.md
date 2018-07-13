@@ -35,7 +35,7 @@ PSPNet的提出是用于复杂场景解析的（scene parsing），场景解析�
 
 2. Confusion categories
 
-在ADE20K数据集中存在很多类别很模糊的类，比如说field和earth，mountain和hill，wall，housebuilding和skyscraper。比如下图2中，摩天大楼就被FCN一部分预测为building，一部分预测为skyscraper。这个问题可以通过利用类别之间的相关关系可以得到解决。
+在ADE20K数据集中存在很多类别很模糊的类，比如说field和earth，mountain和hill，wall，housebuilding和skyscraper。比如下图2中，摩天大楼就被FCN一部分预测为building，一部分预测为skyscraper。通过利用类别之间的相关关系可以得到解决。
 
 3. Inconspicuous Classes
 
