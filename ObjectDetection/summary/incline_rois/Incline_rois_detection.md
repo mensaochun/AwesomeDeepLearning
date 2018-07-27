@@ -19,6 +19,10 @@ In many practical scenes, ROIs may be incline. Popular object detection algorith
 
 [将场景文字数据集ICDAR2013,ICDAR2015转换为PASCAL_VOC数据集格式](https://blog.csdn.net/u013250416/article/details/78821877)
 
+ICDAR数据集官网：http://rrc.cvc.uab.es/?ch=4&com=introduction
+
+ICDAR2015数据集下载：http://rrc.cvc.uab.es/?ch=4&com=introduction，进入download下载页面就可以愉快地下载了。
+
 ## 数据格式
 
 Pascal VOC 数据集介绍：https://blog.csdn.net/weixin_35653315/article/details/71028523

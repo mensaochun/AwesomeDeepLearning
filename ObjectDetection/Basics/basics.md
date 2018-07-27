@@ -1,6 +1,6 @@
 # 基本概念
 
-## I.IOU
+## I. IOU
 
 首先直观上来看 IoU 的计算公式：
 
@@ -30,7 +30,7 @@ intersection = w * h
 iou = intersection / (areai + areaj - intersection)
 ~~~
 
-## II.NMS
+## II. NMS
 
 **NMS（non maximum suppression）**，中文名非极大值抑制，在很多计算机视觉任务中都有广泛应用，如：边缘检测、目标检测等。这里主要以人脸检测中的应用为例，来说明NMS。
 
@@ -63,7 +63,7 @@ iou = intersection / (areai + areaj - intersection)
 
 mensaochun注：NMS只是对同一个类别的物体做的，不会对不同类别的物体做。
 
-## III.感受野和映射
+## III. 感受野和映射
 
 首先，要明白卷积网络的感受野是怎么计算的，参考中文版文章：[卷积神经网络中的感受野计算（译）](https://zhuanlan.zhihu.com/p/26663577)
 
@@ -190,3 +190,13 @@ RoI Pooling layer forward过程：在之前有明确提到：proposal=[x1, y1, x
 ![2](./pics/23.jpg)
 
 具体实现可以参考：[Region of interest pooling explained](https://blog.deepsense.ai/region-of-interest-pooling-explained/)
+
+
+
+## 5. mAP的计算
+
+参考两篇文献：
+
+[Metrics for object detection](https://github.com/rafaelpadilla/Object-Detection-Metrics)
+
+[mAP (mean Average Precision) for Object Detection](https://medium.com/@jonathan_hui/map-mean-average-precision-for-object-detection-45c121a31173)
