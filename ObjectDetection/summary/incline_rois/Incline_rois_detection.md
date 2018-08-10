@@ -2,7 +2,7 @@
 
 In many practical scenes, ROIs may be incline. Popular object detection algorithms such as faster RCNN can not detect incline ROIs. Based on this, researchers are devoted to developing the object detection algorithms to meet the needs.
 
-##Papers
+## Papers
 
 1. Arbitrary-Oriented Scene Text Detection via Rotation Proposals
 
@@ -26,3 +26,5 @@ ICDAR2015数据集下载：http://rrc.cvc.uab.es/?ch=4&com=introduction，进入
 ## 数据格式
 
 Pascal VOC 数据集介绍：https://blog.csdn.net/weixin_35653315/article/details/71028523
+## 最小外包矩形
+python opencv minAreaRect 生成最小外接矩形：https://blog.csdn.net/lanyuelvyun/article/details/76614872
