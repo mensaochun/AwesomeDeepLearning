@@ -14,5 +14,3 @@ This repo is the notes of deep learning, including basic CNN architecture, objec
 
 All above themes are continually updated.
 
-Now the contributors are YouRenchun and HuangHaian. Expect more participants!
-
