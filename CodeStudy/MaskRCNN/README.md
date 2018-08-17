@@ -162,14 +162,14 @@ build做的事情主要包括以下部分：
 | 用途   |       输入的图像       | anchors输出的前景背景label |     输入图像的信息      | anchors输出的bbox的target |
 | 形状   | [batch,1024,1024] | [batch,anchors, 1]  |    [batch,16]    |  [batch, anchors,4]   |
 
-|      | input_gt_class_ids |   input_gt_boxes   |  input_gt_masks  |
-| ---- | :----------------: | :----------------: | :--------------: |
-| 用途   | Head部分的bbox类别label | Head部分的bbox的target | Head部分的bbox的mask |
-| 形状   | [batch, ?,?]两个问号？  |    [batch,?,4]     | [batch,56,56,?]  |
+|      |   input_gt_class_ids    |     input_gt_boxes     |    input_gt_masks    |
+| ---- | :---------------------: | :--------------------: | :------------------: |
+| 用途 | Head部分的bbox类别label | Head部分的bbox的target | Head部分的bbox的mask |
+| 形状 |       [batch, ?]        |      [batch,?,4]       |   [batch,56,56,?]    |
 
 #### 2. Resnet+FPN的输出
 
-rpn_feature_maps：一个list，里面装了各层级的输出。
+rpn_feature_maps：一个list，里面装了各层级的输出，是用来做第二阶段的feature。
 
 ~~~python
  0 = {Tensor} Tensor("fpn_p2/BiasAdd:0", shape=(?, 256, 256, 256), dtype=float32)
@@ -178,7 +178,7 @@ rpn_feature_maps：一个list，里面装了各层级的输出。
  3 = {Tensor} Tensor("fpn_p5/BiasAdd:0", shape=(?, 32, 32, 256), dtype=float32)
 ~~~
 
-mrcnn_feature_maps：一个list，里面装了多个层级的输出，比rpn_feature_maps多一个p6输出。
+mrcnn_feature_maps：一个list，里面装了多个层级的输出，比rpn_feature_maps多一个p6输出，是用来做region poposal的。
 
 ~~~python
  0 = {Tensor} Tensor("fpn_p2/BiasAdd:0", shape=(?, 256, 256, 256), dtype=float32)
@@ -197,10 +197,8 @@ mrcnn_feature_maps：一个list，里面装了多个层级的输出，比rpn_fea
 所做的事情：
 
 - 计算骨架网络的各个层级的feature map大小
-- 生成anchors
+- 在各个level上生成anchors，各个层级上，只会选择一种scale，但是会选择3中长宽比。
 - 将anchor进行normalize
-
-
 
 ### 生成proposal的target,label以及生成实例mask
 
@@ -237,3 +235,4 @@ boundaries and resized to neural network output size.
 5. 对正负样本进行随机采样，正样本比例1/3，负样本比例为2/3。
 6. 给正样本分配label和target。注意之前打的是正负label，这里是类别label。
 7. 给正样本分配mask target。这里有一个选项，是否所有的mask都需要进行normalize。
+
