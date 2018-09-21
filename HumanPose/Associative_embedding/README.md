@@ -28,17 +28,15 @@ typora-copy-images-to: pics
 
 ![1535072885957](pics/1535072885957.png)
 
-检测过程如上图，输入一张包含多个人的图片，经过堆叠的hourglass的架构。hourglass的架构是在人体姿态识别中经常用到的结构，具体参考文章：。这篇文章中对这个结构有做略微的修改，具体的修改参看原文。
+检测过程如上图，输入一张包含多个人的图片，经过堆叠的hourglass的架构。hourglass的架构是在人体姿态识别中经常用到的结构，具体参考hourglass笔记。这篇文章中对这个结构有做略微的修改，具体的修改参看原文。
 
 经过hourglass的网络之后，会吐出来heatmap的检测和associative embedding的检测。heatmap的检测和其他多人姿态识别的方法是一样的，对于每个joint，都会有相应的heatmap进行预测。
 
 问题的关键是怎么预测embeddings。
 
-每个joint都会对应一个associative embedding的预测，如上图所示。注意这里的embedding的长度是1，实际上也可以取别的长度，但是作者发现，embedding的长度对实验结果不太影响，因此为了简单就直接使用一维的。我们现在的目标是，属于同一个人的所有joint我们要让它很接近，而不同人的joint我们要让它距离很远。具体地，我们可以构建这样的目标函数：
+每个joint都会对应一个associative embedding的预测，如上图所示。注意这里的embedding的长度是1，实际上也可以取别的长度，但是作者发现，embedding的长度对实验结果不太影响，因此为了简单就直接使用一维的。我们现在的目标是，属于同一个人的所有joint我们要让它很接近，而不同人的joint我们要让它距离很远。
 
-
-
-其中，$h_k∈R^{W×H}$表示第k个joint的embedding。$h(x)$表示位置像素位置x对应的embedding值。对于N个人来说，让joint位置为$T=\{(x_{nk})\},n=1,...,N,k=1,...,K$，其中$x_{nk}$表示第n个人，第k个joint的真实像素位置。
+假设$h_k∈R^{W×H}$表示第k个joint的embedding。$h(x)$表示位置像素位置x对应的embedding值。对于N个人来说，让joint位置为$T=\{(x_{nk})\},n=1,...,N,k=1,...,K$，其中$x_{nk}$表示第n个人，第k个joint的真实像素位置。则![1535351754219](pics/1535351754219.png)表示第n个人的reference embedding。
 
 ![1535073497672](pics/1535073497672.png)
 

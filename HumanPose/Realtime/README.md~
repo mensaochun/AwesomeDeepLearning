@@ -4,7 +4,7 @@ typora-copy-images-to: pics
 
 # Realtime multi-person 2D Pose Estimation using Part Affinity Fields
 
-# 请参考这篇博客，写得很详细。https://blog.csdn.net/smiling_pie/article/details/79006362
+# 请参考这篇博客，写得很详细。
 ## 1. 创新点
 
 1. 提出一种高效实时检测2D图像中多人姿态的的方法。
